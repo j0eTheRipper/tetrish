@@ -12,7 +12,8 @@ clock = pygame.time.Clock()
 background = pygame.image.load('src/background.png').convert()
 block_images = ('src/block.png', 'src/block1.png', 'src/block2.png')
 new_block = block_images[randint(0, 2)]
-blocks = [Block(new_block, (300, 0))]
+Block(new_block, (300, 0))
+blocks = Block.blocks
 
 
 def main():
@@ -24,7 +25,7 @@ def main():
         play_game()
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def check_for_events():
@@ -41,7 +42,7 @@ def render_blocks():
 
 def play_game():
     block = blocks[-1]
-    previous_blocks = block.perimeter.collidelist([i.perimeter for i in blocks[:-1]])
+    previous_blocks = block.perimeter.collidelist(Block.block_rect)
 
     if block.perimeter.midbottom[1] < MAX and previous_blocks == -1:
         block.move(MAX)
@@ -49,8 +50,11 @@ def play_game():
         pygame.quit()
         exit()
     else:
+        Block.block_rect.append(block.perimeter)
+        Block.block_stack_height[block.perimeter.x // 200] = block.perimeter.y
+        print(Block.block_stack_height)
         new_blk = choose_block(block)
-        blocks.append(Block(new_blk, (300, 0)))
+        Block(new_blk, (300, 0))
 
 
 def choose_block(block):
