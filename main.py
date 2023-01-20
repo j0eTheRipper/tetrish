@@ -52,7 +52,6 @@ def play_game():
     else:
         Block.block_rect.append(block.perimeter)
         Block.block_stack_height[block.perimeter.x // 200] = block.perimeter.y
-        print(Block.block_stack_height)
         new_blk = choose_block(block)
         Block(new_blk, (300, 0))
 
