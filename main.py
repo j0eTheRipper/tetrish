@@ -11,9 +11,10 @@ screen = pygame.display.set_mode((MAX, MAX))
 clock = pygame.time.Clock()
 background = pygame.image.load('src/background.png').convert()
 block_images = ('src/block.png', 'src/block1.png', 'src/block2.png')
+
 new_block = block_images[randint(0, 2)]
 Block(new_block, (300, 0))
-blocks = Block.blocks
+BLOCK_HISTORY = Block.blocks
 
 
 def main():
@@ -25,23 +26,29 @@ def main():
         play_game()
 
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(60)
 
 
 def check_for_events():
+    block = BLOCK_HISTORY[-1]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                block.go_right()
+            elif event.key == pygame.K_LEFT:
+                block.go_left()
 
 
 def render_blocks():
-    for i in blocks:
+    for i in BLOCK_HISTORY:
         screen.blit(i.surface, i.perimeter)
 
 
 def play_game():
-    block = blocks[-1]
+    block = BLOCK_HISTORY[-1]
     previous_blocks = block.perimeter.collidelist(Block.block_rect)
 
     if block.perimeter.midbottom[1] < MAX and previous_blocks == -1:
@@ -57,7 +64,7 @@ def play_game():
 
 
 def choose_block(block):
-    if len(blocks) % 3 == 0:
+    if len(BLOCK_HISTORY) % 3 == 0:
         return block_images[randint(0, 2)]
     else:
         if block.image == block_images[0]:

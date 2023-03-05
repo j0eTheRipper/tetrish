@@ -10,7 +10,7 @@ class Block:
         self.surface = pygame.image.load(image).convert_alpha()
         self.perimeter = self.surface.get_rect(center=place)
         self.image = image
-        self.__speed = 10
+        self.__speed = 5
         Block.blocks.append(self)
 
     def get_down(self, limit):
@@ -39,10 +39,6 @@ class Block:
 
     def move(self, max_limit):
         self.get_down(max_limit)
-        if pygame.key.get_pressed()[pygame.K_LEFT]:
-            self.go_left()
-        elif pygame.key.get_pressed()[pygame.K_RIGHT]:
-            self.go_right()
 
     def __check_for_collision(self, x):
         if self.perimeter.bottomleft[1] >= Block.block_stack_height[x]:
