@@ -14,7 +14,9 @@ block_images = ('src/block.png', 'src/block1.png', 'src/block2.png')
 
 new_block = block_images[randint(0, 2)]
 Block(new_block, (300, 0))
-BLOCK_HISTORY = Block.blocks
+BLOCK_HISTORY = Block.block_history
+
+pygame.display.set_caption('Tetrish')
 
 
 def main():
@@ -49,15 +51,14 @@ def render_blocks():
 
 def play_game():
     block = BLOCK_HISTORY[-1]
-    previous_blocks = block.perimeter.collidelist(Block.block_rect)
 
-    if block.perimeter.midbottom[1] < MAX and previous_blocks == -1:
-        block.move(MAX)
-    elif block.perimeter.midtop[1] <= 0:
+    if not block.is_at_bottom and block.is_untouched:
+        block.get_down(MAX)
+    elif block.perimeter.midtop[1] <= 0:  # Block has no space to go.
         pygame.quit()
         exit()
     else:
-        Block.block_rect.append(block.perimeter)
+        Block.old_blocks_peremiters.append(block.perimeter)
         Block.block_stack_height[block.perimeter.x // 200] = block.perimeter.y
         new_blk = choose_block(block)
         Block(new_blk, (300, 0))

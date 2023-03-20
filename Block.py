@@ -2,8 +2,8 @@ import pygame
 
 
 class Block:
-    blocks = []
-    block_rect = []
+    block_history = []
+    old_blocks_peremiters = []
     block_stack_height = [600, 600, 600]
 
     def __init__(self, image, place):
@@ -11,7 +11,7 @@ class Block:
         self.perimeter = self.surface.get_rect(center=place)
         self.image = image
         self.__speed = 5
-        Block.blocks.append(self)
+        Block.block_history.append(self)
 
     def get_down(self, limit):
         if self.perimeter.midbottom[1] < limit:
@@ -37,9 +37,14 @@ class Block:
             if not will_collide:
                 self.perimeter.x = 200
 
-    def move(self, max_limit):
-        self.get_down(max_limit)
-
     def __check_for_collision(self, x):
         if self.perimeter.bottomleft[1] >= Block.block_stack_height[x]:
             return True
+
+    @property
+    def is_untouched(self):
+        return self.perimeter.collidelist(Block.old_blocks_peremiters) == -1
+
+    @property
+    def is_at_bottom(self):
+        return self.perimeter.midbottom[1] >= 600
