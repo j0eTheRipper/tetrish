@@ -1,5 +1,6 @@
 import pygame
 from Block import Block
+from Word import Word
 from sys import exit
 from random import randint
 
@@ -13,7 +14,7 @@ background = pygame.image.load('src/background.png').convert()
 block_images = ('src/block.png', 'src/block1.png', 'src/block2.png')
 
 new_block = block_images[randint(0, 2)]
-Block(new_block, (300, 0))
+Block(new_block, (300, 0), 'youssef')
 BLOCK_HISTORY = Block.block_history
 
 pygame.display.set_caption('Tetrish')
@@ -47,6 +48,7 @@ def check_for_events():
 def render_blocks():
     for i in BLOCK_HISTORY:
         screen.blit(i.surface, i.perimeter)
+        screen.blit(i.word.surface, i.word.perimeter)
 
 
 def play_game():
@@ -61,7 +63,7 @@ def play_game():
         Block.old_blocks_peremiters.append(block.perimeter)
         Block.block_stack_height[block.perimeter.x // 200] = block.perimeter.y
         new_blk = choose_block(block)
-        Block(new_blk, (300, 0))
+        Block(new_blk, (300, 0), 'youssef')
 
 
 def choose_block(block):
