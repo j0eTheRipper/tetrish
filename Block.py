@@ -4,7 +4,7 @@ from Word import Word
 
 class Block:
     block_history = []
-    old_blocks_peremiters = []
+    dead_blocks = []
     block_stack_height = [600, 600, 600]
 
     def __init__(self, image, place, word):
@@ -43,13 +43,17 @@ class Block:
                 self.perimeter.x = 200
         self.word.perimeter.center = self.perimeter.center
 
+    def kill_block(self):
+        Block.dead_blocks.append(self.perimeter)
+        Block.block_stack_height[self.perimeter.x // 200] = self.perimeter.y
+
     def __check_for_collision(self, x):
         if self.perimeter.bottomleft[1] >= Block.block_stack_height[x]:
             return True
 
     @property
     def is_untouched(self):
-        return self.perimeter.collidelist(Block.old_blocks_peremiters) == -1
+        return self.perimeter.collidelist(Block.dead_blocks) == -1
 
     @property
     def is_at_bottom(self):
