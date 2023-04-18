@@ -1,7 +1,7 @@
 import pygame
 from Block import Block
 from sys import exit
-from random import randint
+from generate_words import generate_word, generate_sentence
 
 
 pygame.init()
@@ -10,9 +10,10 @@ MAX = 600
 screen = pygame.display.set_mode((MAX, MAX))
 clock = pygame.time.Clock()
 background = pygame.image.load('src/background.png').convert()
-block_images = ('src/block.png', 'src/block1.png', 'src/block2.png')
-new_block = block_images[randint(0, 2)]
-Block(new_block, (300, 0), 'youssef')
+sentences = generate_sentence()
+sentence = next(sentences)
+words = generate_word(sentence)
+Block((300, 0), words)
 BLOCK_HISTORY = Block.block_history
 
 pygame.display.set_caption('Tetrish')
@@ -27,7 +28,7 @@ def main():
         play_game()
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def check_for_events():
@@ -51,6 +52,8 @@ def render_blocks():
 
 def play_game():
     block = BLOCK_HISTORY[-1]
+    global sentence
+    global words
 
     if not block.is_at_bottom and block.is_untouched:
         block.get_down(MAX)
@@ -59,24 +62,12 @@ def play_game():
         exit()
     else:
         block.kill_block()
-        create_block(block)
-
-
-def create_block(block):
-    new_blk = choose_block(block)
-    Block(new_blk, (300, 0), 'youssef')
-
-
-def choose_block(block):
-    if len(BLOCK_HISTORY) % 3 == 0:
-        return block_images[randint(0, 2)]
-    else:
-        if block.image == block_images[0]:
-            return block_images[1]
-        elif block.image == block_images[1]:
-            return block_images[2]
-        elif block.image == block_images[2]:
-            return block_images[0]
+        try:
+            Block((300, 0), words)
+        except StopIteration:
+            sentence = next(sentences)
+            words = generate_word(sentence)
+            Block((300, 0), words)
 
 
 if __name__ == '__main__':
