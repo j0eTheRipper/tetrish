@@ -8,8 +8,8 @@ RIGHT = 400
 
 
 class Block:
-    block_history = []
-    dead_blocks = []
+    block_history = []  # all blocks including active ones
+    anchored_blocks = []  # blocks that are fixed
     block_stack_height = [600, 600, 600]
 
     def __init__(self, place, word):
@@ -40,10 +40,19 @@ class Block:
             self.__move(MIDDLE)
         self.word.perimeter.center = self.perimeter.center
 
-    def kill_block(self):
-        place = self.perimeter.x // 200
-        Block.dead_blocks.append(self.perimeter)
-        Block.block_stack_height[place] = self.perimeter.y
+    def anchor_block(self):
+        index = self.perimeter.x // 200
+        Block.anchored_blocks.append(self.perimeter)
+        Block.block_stack_height[index] = self.perimeter.y
+        return self.txt, index
+
+    @classmethod
+    def kill_row(cls):
+        for i in range(3):
+            cls.block_history.pop()
+            cls.anchored_blocks.pop()
+            cls.block_stack_height[i] += 50
+        print(cls.block_stack_height)
 
     def __move(self, place):
         index = place // 200
@@ -70,7 +79,7 @@ class Block:
 
     @property
     def is_untouched(self):
-        return self.perimeter.collidelist(Block.dead_blocks) == -1
+        return self.perimeter.collidelist(Block.anchored_blocks) == -1
 
     @property
     def is_at_bottom(self):

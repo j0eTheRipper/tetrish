@@ -11,8 +11,9 @@ screen = pygame.display.set_mode((MAX, MAX))
 clock = pygame.time.Clock()
 background = pygame.image.load('src/background.png').convert()
 sentences = generate_sentence()
-sentence = next(sentences)
-words = generate_word(sentence)
+correct_sentence = next(sentences)
+words = generate_word(correct_sentence)
+user_sentence = ['', '', '']
 Block((300, 0), words)
 BLOCK_HISTORY = Block.block_history
 
@@ -52,7 +53,7 @@ def render_blocks():
 
 def play_game():
     block = BLOCK_HISTORY[-1]
-    global sentence
+    global correct_sentence
     global words
 
     if not block.is_at_bottom and block.is_untouched:
@@ -61,12 +62,15 @@ def play_game():
         pygame.quit()
         exit()
     else:
-        block.kill_block()
+        word, index = block.anchor_block()
+        user_sentence[index] = word
         try:
             Block((300, 0), words)
         except StopIteration:
-            sentence = next(sentences)
-            words = generate_word(sentence)
+            if user_sentence == correct_sentence.split():
+                Block.kill_row()
+            correct_sentence = next(sentences)
+            words = generate_word(correct_sentence)
             Block((300, 0), words)
 
 

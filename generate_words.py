@@ -11,5 +11,5 @@ def generate_word(sentence):
 def generate_sentence():
     with open('src/example.txt') as file:
         for sentence in file:
-            yield sentence
+            yield sentence.strip("\n")
 
