@@ -1,5 +1,6 @@
 import pygame
 from Block import Block
+from Word import Word
 from sys import exit
 from generate_words import generate_word, generate_sentence
 
@@ -56,6 +57,9 @@ def play_game():
     global correct_sentence
     global words
 
+    if pygame.key.get_pressed()[pygame.K_DOWN]:
+        block.get_down(MAX)
+
     if not block.is_at_bottom and block.is_untouched:
         block.get_down(MAX)
     elif block.perimeter.midtop[1] <= 0:  # Block has no space to go.
@@ -68,7 +72,7 @@ def play_game():
             Block((300, 0), words)
         except StopIteration:
             if user_sentence == correct_sentence.split():
-                Block.kill_row()
+                Block.kill_last_row()
             correct_sentence = next(sentences)
             words = generate_word(correct_sentence)
             Block((300, 0), words)

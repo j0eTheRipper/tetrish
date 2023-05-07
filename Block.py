@@ -28,16 +28,16 @@ class Block:
 
     def go_left(self):
         if self.perimeter.x == 200:
-            self.__move(LEFT)
+            self.__shift(LEFT)
         elif self.perimeter.x == 400:
-            self.__move(MIDDLE)
+            self.__shift(MIDDLE)
         self.word.perimeter.center = self.perimeter.center
 
     def go_right(self):
         if self.perimeter.x == 200:
-            self.__move(RIGHT)
+            self.__shift(RIGHT)
         elif self.perimeter.x == 0:
-            self.__move(MIDDLE)
+            self.__shift(MIDDLE)
         self.word.perimeter.center = self.perimeter.center
 
     def anchor_block(self):
@@ -47,14 +47,13 @@ class Block:
         return self.txt, index
 
     @classmethod
-    def kill_row(cls):
+    def kill_last_row(cls):
         for i in range(3):
             cls.block_history.pop()
             cls.anchored_blocks.pop()
             cls.block_stack_height[i] += 50
-        print(cls.block_stack_height)
 
-    def __move(self, place):
+    def __shift(self, place):
         index = place // 200
         will_collide = self.__check_for_collision(index)
         if not will_collide:
