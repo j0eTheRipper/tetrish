@@ -8,8 +8,8 @@ def generate_word(sentence):
         yield word
 
 
-def generate_sentence():
-    with open('src/example.txt') as file:
+def generate_sentence(source):
+    with open(source) as file:
         for sentence in file:
             yield sentence.strip("\n")
 
