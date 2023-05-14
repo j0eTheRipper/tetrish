@@ -1,7 +1,8 @@
 import pygame
 from Block import Block
-from Word import Word
 from sys import exit
+from os import listdir
+from random import choice
 from generate_words import generate_word, generate_sentence
 
 
@@ -37,10 +38,11 @@ def main():
         if not start:
             screen.blit(instructions, (150, 100))
             if pygame.key.get_pressed()[pygame.K_RIGHT]:
-                initiate_game('src/example.txt')
+                initiate_game('src/scentences/english/en2.txt')
+                # initiate_game(select_level())
                 start += 1
             elif pygame.key.get_pressed()[pygame.K_LEFT]:
-                initiate_game('src/french.txt')
+                initiate_game('src/scentences/french.txt')
                 start += 1
         else:
             render_blocks()
@@ -96,8 +98,15 @@ def play_game():
             except StopIteration:
                 win_screen = pygame.image.load('src/you_won.png').convert()
                 screen.blit(win_screen, (150, 100))
-            words = generate_word(correct_sentence)
-            Block((300, 0), words)
+            else:
+                words = generate_word(correct_sentence)
+                Block((300, 0), words)
+
+
+def select_level():
+    all_levels = listdir('src/scentences/english')
+    return 'src/scentences/english/' + choice(all_levels)
+
 
 
 if __name__ == '__main__':
