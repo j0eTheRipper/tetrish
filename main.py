@@ -30,6 +30,7 @@ pygame.display.set_caption('Tetrish')
 
 def main():
     start = 0
+    stop = 0
     while True:
         check_for_events()
 
@@ -46,7 +47,11 @@ def main():
                 start += 1
         else:
             render_blocks()
-            play_game()
+            if stop:
+                win_screen = pygame.image.load('src/you_won.png').convert()
+                screen.blit(win_screen, (150, 100))
+            else:
+                stop = play_game()
 
         pygame.display.update()
         clock.tick(30)
@@ -96,8 +101,7 @@ def play_game():
             try:
                 correct_sentence = next(sentences)
             except StopIteration:
-                win_screen = pygame.image.load('src/you_won.png').convert()
-                screen.blit(win_screen, (150, 100))
+                return True
             else:
                 words = generate_word(correct_sentence)
                 Block((300, 0), words)
@@ -106,7 +110,6 @@ def play_game():
 def select_level():
     all_levels = listdir('src/scentences/english')
     return 'src/scentences/english/' + choice(all_levels)
-
 
 
 if __name__ == '__main__':
